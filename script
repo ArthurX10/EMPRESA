@@ -1,0 +1,39 @@
+select *from [dbo].[Categorias]
+
+select * from [dbo].[Clientes]
+order by Nome
+
+select * from [dbo].[Funcionarios]	
+where Cargo like 'Gerente%' 
+	  and Pais like 'Brasil' 
+	  and salario > 1500
+
+select * from [dbo].[Produtos]
+where Descontinuado is not null		
+	  and Preco between 10 and 100
+	  and Unidade s is not null
+
+
+select Empresa as Fornecedor, Contato as Telefone  from [dbo].[Fornecedores]
+where Pais in ('Itália', 'Noruega', 'Alemanha','Reino Unido') 
+order by Fornecedor
+
+
+SELECT MAX(Salario) as maior,
+	   MIN(Salario) as menor,
+	   AVG(Salario) as media
+FROM [dbo].[Funcionarios]
+
+
+SELECT max(SALARIO) AS MEDIA FROM [dbo].[Funcionarios]
+WHERE [Cargo] LIKE 'Gerente%'
+	  and Pais = 'Brasil'
+
+
+select max(salario) as maior from [dbo].[Funcionarios]
+where Cidade in ('Tianguá', 'Viçosa', 'Ubajara', 'Ibiapina')
+group by Salario
+order by Salario
+
+select avg(salario) as media from [dbo].[Funcionarios]
+
