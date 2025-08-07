@@ -49,3 +49,9 @@ where unidades > 10
 GROUP by unidades
 ORDER by unidades;
 
+SELECT codfornecedor, COUNT(*) AS quantidade_produtos
+FROM Produtos
+WHERE preco_unitario > 5.00 AND preco_unitario < 10.00
+GROUP BY codfornecedor
+ORDER BY quantidade_produtos ASC;
+
