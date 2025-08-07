@@ -43,3 +43,9 @@ WHERE preco = (preco * qtde) - desconto
 GROUP BY numped
 ORDER BY numped;
 
+select unidades, count(codcategoria)
+from Produtos
+where unidades > 10
+GROUP by unidades
+ORDER by unidades;
+
