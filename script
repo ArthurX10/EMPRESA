@@ -37,3 +37,9 @@ order by Salario
 
 select avg(salario) as media from [dbo].[Funcionarios]
 
+SELECT numped as numero_pedido, SUM(preco) AS preco_total
+FROM DetalhesPed
+WHERE preco = (preco * qtde) - desconto
+GROUP BY numped
+ORDER BY numped;
+
