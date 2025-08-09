@@ -1,9 +1,15 @@
-select *from [dbo].[Categorias]
+1º Exibir todos os dados das categorias.
+SELECT * FROM Categorias
 
-select * from [dbo].[Clientes]
-order by Nome
 
-select * from [dbo].[Funcionarios]	
+Exibir o nome de todos os clientes ordenados pelo nome.
+SELECT nome
+from Clientes
+ORDER by nome
+
+Exibir o nome dos funcionários de cargo gerente (existem vários gerentes, por exemplo gerente
+de vendas, gerente de marketing), que residem no Brasil e cujo salário é superior a R$ 1500.select * from [dbo].[Funcionarios]	
+
 where Cargo like 'Gerente%' 
 	  and Pais like 'Brasil' 
 	  and salario > 1500
@@ -54,4 +60,20 @@ FROM Produtos
 WHERE preco_unitario > 5.00 AND preco_unitario < 10.00
 GROUP BY codfornecedor
 ORDER BY quantidade_produtos ASC;
+
+select SUM(salario) as Total, cargo
+from Funcionarios
+where cargo in('Gerente', 'Coordenador')
+GROUP by cargo
+ORDER by Total 
+
+SELECT pais ,AVG(salario)
+from Funcionarios
+GROUP by pais
+
+SELECT COUNT(*) as Quantidades, AVG(preco) as media 
+from Produtos
+WHERE descontinuado is not null
+GROUP by codcategoria
+ORDER by media
 
