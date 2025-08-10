@@ -1,79 +1,129 @@
+Fiz as consultas no sqlite
+
 1º Exibir todos os dados das categorias.
+
 SELECT * FROM Categorias
 
 
-Exibir o nome de todos os clientes ordenados pelo nome.
+2º Exibir o nome de todos os clientes ordenados pelo nome.
+
 SELECT nome
 from Clientes
 ORDER by nome
 
-Exibir o nome dos funcionários de cargo gerente (existem vários gerentes, por exemplo gerente
-de vendas, gerente de marketing), que residem no Brasil e cujo salário é superior a R$ 1500.select * from [dbo].[Funcionarios]	
 
-where Cargo like 'Gerente%' 
-	  and Pais like 'Brasil' 
-	  and salario > 1500
+3º Exibir o nome dos funcionários de cargo gerente (existem vários gerentes, por exemplo gerente
+de vendas, gerente de marketing), que residem no Brasil e cujo salário é superior a R$ 1500.
 
-select * from [dbo].[Produtos]
-where Descontinuado is not null		
-	  and Preco between 10 and 100
-	  and Unidade s is not null
+SELECT nome
+from Funcionarios
+WHERE cargo like 'Gerente%'	
+	  AND pais = 'Brasil' and salario >= 1500
 
 
-select Empresa as Fornecedor, Contato as Telefone  from [dbo].[Fornecedores]
-where Pais in ('Itália', 'Noruega', 'Alemanha','Reino Unido') 
-order by Fornecedor
+4º Exibir os produtos que não estão descontinuados, cujo preço é maior ou igual a 10 e menor ou
+igual a 100 e cuja unidade é diferente de nulo.
 
-
-SELECT MAX(Salario) as maior,
-	   MIN(Salario) as menor,
-	   AVG(Salario) as media
-FROM [dbo].[Funcionarios]
-
-
-SELECT max(SALARIO) AS MEDIA FROM [dbo].[Funcionarios]
-WHERE [Cargo] LIKE 'Gerente%'
-	  and Pais = 'Brasil'
-
-
-select max(salario) as maior from [dbo].[Funcionarios]
-where Cidade in ('Tianguá', 'Viçosa', 'Ubajara', 'Ibiapina')
-group by Salario
-order by Salario
-
-select avg(salario) as media from [dbo].[Funcionarios]
-
-SELECT numped as numero_pedido, SUM(preco) AS preco_total
-FROM DetalhesPed
-WHERE preco = (preco * qtde) - desconto
-GROUP BY numped
-ORDER BY numped;
-
-select unidades, count(codcategoria)
+SELECT * 
 from Produtos
-where unidades > 10
-GROUP by unidades
-ORDER by unidades;
+where descontinuado is NULL 
+	  and preco BETWEEN 10 and 100  
+      and unidades is not NULL
 
-SELECT codfornecedor, COUNT(*) AS quantidade_produtos
+
+5º Exibir o nome da empresa e o contato dos fornecedores da Itália, Noruega, Alemanha ou Reino
+Unido. Renomeie o nome da empresa para Fornecedor e o contato para Telefone. Ordene o
+resultado pelo nome da empresa.
+
+SELECT empresa as Fornecedor , contato as Telefone
+FROM Fornecedores 
+where pais in ('Itália', 'Noroega', 'Alemanha', 'Reino Unido')
+ORDER by pais
+
+6º Exibir o maior salário, o menor salário e a média salário dos funcionários por país.
+
+SELECT pais, 
+	   MAX(salario),
+	   MIN(salario),
+       AVG(salario)
+FROM Funcionarios
+GROUP BY pais
+
+7º Exibir o maior salário dos funcionários de cargo Gerente (existem vários gerentes, por exemplo
+gerente de vendas, gerente de marketing) e que residem no Brasil.
+
+SELECT MAX(salario)
+FROM Funcionarios
+WHERE cargo LIKE 'Gerente%' and pais = 'Brasil'
+
+
+8º Exibir o maior salário dos funcionários de cada uma das cidades Tianguá, Viçosa, Ubajara e
+Ibiapina. Ordene o resultado pelo maior salário.
+
+SELECT MAX(salario) as Maior_salario
+FROM Funcionarios
+WHERE cidade in ('Tiangua', 'Viçosa', 'Ubajara', 'Ibiapina')
+ORDEr by Maior_salario
+
+9º Exibir a média de salário dos funcionários de cargo Coordenador (considere que podem existir
+diversos coordenadores) por cidade. Ordene o resultado pela média de salário.
+
+SELECT cidade ,AVG(salario) AS Media_Salario
+FROM Funcionarios
+WHERE cargo like 'Coordenador%' 
+GROUP by cidade
+ORDER by Media_Salario
+
+10º Exibir o número do pedido e o valor total do pedido. Considere que o valor total de um pedido é
+obtido a partir do somatório do preço do produto * Qtde – Desconto. Ordene o resultado pelo
+número do pedido.
+
+SELECT numped AS Numero_de_Pedidos, SUM((preco * qtde) - desconto) AS Valor_Total
+from DetalhesPed
+GROUP by numped
+order by numped
+
+11º Exibir a quantidade de produtos por categoria. Exiba apenas as categorias que possuem mais
+de 10 produtos. Ordene o resultado pela quantidade de produtos.
+
+SELECT codcategoria, COUNT(*) AS quantidade_produtos
 FROM Produtos
-WHERE preco_unitario > 5.00 AND preco_unitario < 10.00
-GROUP BY codfornecedor
-ORDER BY quantidade_produtos ASC;
+GROUP BY codcategoria
+HAVING COUNT(*) > 10
+ORDER BY quantidade_produtos DESC
 
-select SUM(salario) as Total, cargo
-from Funcionarios
-where cargo in('Gerente', 'Coordenador')
+12º Exibir a quantidade de produtos cujo preço é superior a 5.00 e inferior a 10.00, por fornecedor.
+Ordene o resultado pela quantidade.
+
+SELECT COUNT(*) as qtde
+from DetalhesPed
+WHERE preco > 5 AND preco < 10
+GROUP by codprod
+ORDER by qtde desc 
+
+13º Exibir o somatório do salário dos funcionários de cargo Gerente ou Coordenador. Agrupe o
+resultado pelo cargo dos funcionários. Ordene o resultado pelo somatório. Renomeie a coluna
+para Total. Exiba também o cargo.
+
+SELECT  cargo ,SUM(salario) as Total
+FROM Funcionarios
+WHERE cargo like 'Gerente%' or cargo like  'Coodenador%'
 GROUP by cargo
-ORDER by Total 
+order by Total desc 
 
-SELECT pais ,AVG(salario)
-from Funcionarios
-GROUP by pais
+14º Exibir a média de salário dos funcionários de acordo com o País.
 
-SELECT COUNT(*) as Quantidades, AVG(preco) as media 
+SELECT pais, AVG (salario)
+FROM Funcionarios
+GROUP by pais 
+
+15º Exibir a quantidade de produtos e a média de preço dos produtos descontinuados de cada
+categoria. Ordene o resultado pela média de preço.
+
+SELECT  codprod ,COUNT(*) AS QUANTIDADE_PRODUTOS,  AVG(preco) as Media_Preço
 from Produtos
-WHERE descontinuado is not null
-GROUP by codcategoria
-ORDER by media
+where descontinuado is not null 
+ORDER by Media_Preço
+
+
 
