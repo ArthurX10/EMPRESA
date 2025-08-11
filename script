@@ -1,29 +1,21 @@
-Fiz as consultas no sqlite
-
-1º Exibir todos os dados das categorias.
 
 SELECT * FROM Categorias
 
-
-2º Exibir o nome de todos os clientes ordenados pelo nome.
-
+-- exibir todos os nomes da tabela cliente e ordenalos pelos nomes
 SELECT nome
 from Clientes
 ORDER by nome
 
-
-3º Exibir o nome dos funcionários de cargo gerente (existem vários gerentes, por exemplo gerente
-de vendas, gerente de marketing), que residem no Brasil e cujo salário é superior a R$ 1500.
-
+-- exibir todos os nomes dos funcionarios onde o cargo é Gerente
 SELECT nome
 from Funcionarios
-WHERE cargo like 'Gerente%'	
-	  AND pais = 'Brasil' and salario >= 1500
+WHERE cargo like 'Gerente%'	a
+      and pais = 'Brasil' 
+	  and salario > 1500 
 
 
-4º Exibir os produtos que não estão descontinuados, cujo preço é maior ou igual a 10 e menor ou
-igual a 100 e cuja unidade é diferente de nulo.
 
+-- exibir todos os dados de produtos onde os mesmos nao são descontinuados e os preços são entre 10 e 100 e as unidades sao diferente de null
 SELECT * 
 from Produtos
 where descontinuado is NULL 
@@ -31,17 +23,15 @@ where descontinuado is NULL
       and unidades is not NULL
 
 
-5º Exibir o nome da empresa e o contato dos fornecedores da Itália, Noruega, Alemanha ou Reino
-Unido. Renomeie o nome da empresa para Fornecedor e o contato para Telefone. Ordene o
-resultado pelo nome da empresa.
-
+-- exibir o a empresa que foi renomeado pra Fornecedos e os contatos que foram renoneados para telefone, onde os fornecedore são dos paises da italia,
+noroega, alemanha, e reino unido ordenados pelo pais
 SELECT empresa as Fornecedor , contato as Telefone
 FROM Fornecedores 
 where pais in ('Itália', 'Noroega', 'Alemanha', 'Reino Unido')
 ORDER by pais
 
-6º Exibir o maior salário, o menor salário e a média salário dos funcionários por país.
 
+-- exibir o maior salario, menor salario e a media de todos os salarios da tabela de funcionarios agrupados pelos paises 
 SELECT pais, 
 	   MAX(salario),
 	   MIN(salario),
@@ -49,77 +39,58 @@ SELECT pais,
 FROM Funcionarios
 GROUP BY pais
 
-7º Exibir o maior salário dos funcionários de cargo Gerente (existem vários gerentes, por exemplo
-gerente de vendas, gerente de marketing) e que residem no Brasil.
-
+-- exibir o maior salario onde o cargo é Gerente e o pais é brasil 
 SELECT MAX(salario)
 FROM Funcionarios
 WHERE cargo LIKE 'Gerente%' and pais = 'Brasil'
 
-
-8º Exibir o maior salário dos funcionários de cada uma das cidades Tianguá, Viçosa, Ubajara e
-Ibiapina. Ordene o resultado pelo maior salário.
-
+-- exibir o maior salario de funcionario das cidades de tiangua, viçosa, ubajara e ibiapina e ordena-los por  salario
 SELECT MAX(salario) as Maior_salario
 FROM Funcionarios
 WHERE cidade in ('Tiangua', 'Viçosa', 'Ubajara', 'Ibiapina')
 ORDEr by Maior_salario
 
-9º Exibir a média de salário dos funcionários de cargo Coordenador (considere que podem existir
-diversos coordenadores) por cidade. Ordene o resultado pela média de salário.
-
+-- exibir a media salarial dos funciaonarios, onde o cargo é igual a cordenador e agrupalos por cidade
 SELECT cidade ,AVG(salario) AS Media_Salario
 FROM Funcionarios
 WHERE cargo like 'Coordenador%' 
 GROUP by cidade
 ORDER by Media_Salario
 
-10º Exibir o número do pedido e o valor total do pedido. Considere que o valor total de um pedido é
-obtido a partir do somatório do preço do produto * Qtde – Desconto. Ordene o resultado pelo
-número do pedido.
 
+-- exibir as informações dos pedidos, o valor total dos produtos (calculados atraves da qtde * preco) - desconto, e agrupa-los e ordenalos pelo numero do pedido 
 SELECT numped AS Numero_de_Pedidos, SUM((preco * qtde) - desconto) AS Valor_Total
 from DetalhesPed
 GROUP by numped
 order by numped
 
-11º Exibir a quantidade de produtos por categoria. Exiba apenas as categorias que possuem mais
-de 10 produtos. Ordene o resultado pela quantidade de produtos.
-
+-- exibir a quantidades de produtos por categoria, agrupados por categorias, onde só seram exibidos os produtos com mais de 10 unidades, ordenados pela quantidade dos produtos
 SELECT codcategoria, COUNT(*) AS quantidade_produtos
 FROM Produtos
 GROUP BY codcategoria
 HAVING COUNT(*) > 10
 ORDER BY quantidade_produtos DESC
 
-12º Exibir a quantidade de produtos cujo preço é superior a 5.00 e inferior a 10.00, por fornecedor.
-Ordene o resultado pela quantidade.
-
+-- exbir as quantidades dos produtos onde o preco é maior que 5 e menor que 10 agrualos pelos codigos dos produtos e ordenalos pela quantidades 
 SELECT COUNT(*) as qtde
 from DetalhesPed
 WHERE preco > 5 AND preco < 10
 GROUP by codprod
 ORDER by qtde desc 
 
-13º Exibir o somatório do salário dos funcionários de cargo Gerente ou Coordenador. Agrupe o
-resultado pelo cargo dos funcionários. Ordene o resultado pelo somatório. Renomeie a coluna
-para Total. Exiba também o cargo.
-
+-- exibir a soma dos salarios dos funcianarios de cargo gerente ou coodenador, agrupalos por cargo e ordenalos pelo total das somas
 SELECT  cargo ,SUM(salario) as Total
 FROM Funcionarios
 WHERE cargo like 'Gerente%' or cargo like  'Coodenador%'
 GROUP by cargo
 order by Total desc 
 
-14º Exibir a média de salário dos funcionários de acordo com o País.
-
+-- media dos salarios dos funcionarios agrupados pelos paises
 SELECT pais, AVG (salario)
 FROM Funcionarios
 GROUP by pais 
 
-15º Exibir a quantidade de produtos e a média de preço dos produtos descontinuados de cada
-categoria. Ordene o resultado pela média de preço.
-
+-- exibir as quantidades dos produtos e a media deles, onde somente os produtos tiverem com o descontinuado não null , e ordenalos por media do precos
 SELECT  codprod ,COUNT(*) AS QUANTIDADE_PRODUTOS,  AVG(preco) as Media_Preço
 from Produtos
 where descontinuado is not null 
